@@ -64,6 +64,10 @@ public class TerminalServer implements Terminal{
 
     public void changeBalance(double amount, String operation) {
         if (operation.equals("minus")){
+            if (this.balance - amount < 0) {
+                System.out.println("Недостаточно средств на счёте!");
+                menu();
+            }
             this.balance -= amount;
             System.out.println("Снятие денег с баланса: " + amount);
         } else {
