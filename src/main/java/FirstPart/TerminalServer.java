@@ -1,5 +1,8 @@
 package FirstPart;
 
+import FirstPart.Operations.AdditionOperation;
+import FirstPart.Operations.ChargeOperation;
+import FirstPart.Operations.Operation;
 import FirstPart.exceptions.AccountIsLockedException;
 import FirstPart.exceptions.WrongPinException;
 
@@ -49,12 +52,12 @@ public class TerminalServer implements Terminal{
             case 1:
                 System.out.print("\nВведите сумму для внесения: ");
                 amount = validateAmount();
-                changeBalance(amount, "plus");
+                changeBalance(new AdditionOperation(this.balance, amount));
                 menu();
             case 2:
                 System.out.print("\nВведите сумму для снятия: ");
                 amount = validateAmount();
-                changeBalance(amount, "minus");
+                changeBalance(new ChargeOperation(this.balance, amount));
                 menu();
             case 3:
                 System.out.print("\nБаланс счёта: " + getBalance());
@@ -62,18 +65,8 @@ public class TerminalServer implements Terminal{
         }
     }
 
-    public void changeBalance(double amount, String operation) {
-        if (operation.equals("minus")){
-            if (this.balance - amount < 0) {
-                System.out.println("Недостаточно средств на счёте!");
-                menu();
-            }
-            this.balance -= amount;
-            System.out.println("Снятие денег с баланса: " + amount);
-        } else {
-            this.balance += amount;
-            System.out.println("Внесение денег на баланс: " + amount);
-        }
+    public void changeBalance(Operation operation) {
+        this.balance = operation.perform();
     }
 
     private double validateAmount() {
